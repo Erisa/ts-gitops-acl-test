@@ -12,7 +12,7 @@
             // See https://tailscale.com/kb/1255/log-streaming/#private-endpoints
             "action": "accept",
             "src":    ["logstream@tailscale"],
-            "dst":    ["[fd7a:115c:a1e0::5001:9237]:port"],
+            "dst":    ["[fd7a:115c:a1e0::5001:9237]:9200"],
           }
           
 	],
