@@ -1,0 +1,24 @@
+// Example/default ACLs for unrestricted connections.
+{
+	"acls": [
+		{"action": "accept", "src": ["autogroup:member"], "dst": ["*:*"]},
+
+	],
+	// Define users and devices that can use Tailscale SSH.
+	"ssh": [
+		// Allow all users to SSH into their own devices in check mode.
+		// Comment this section out if you want to define specific restrictions.
+		{
+			"action": "check",
+			"src":    ["autogroup:member"],
+			"dst":    ["autogroup:self"],
+			"users":  ["autogroup:nonroot", "root"],
+		},
+	],
+
+	"hosts": {
+		"test":   "192.168.1.0/24",
+		"testip": "192.168.1.1",
+	},
+
+}
