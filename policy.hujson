@@ -1,3 +1,5 @@
+// This tailnet's ACLs are maintained in https://github.com/Erisa/ts-gitops-acl-test
+
 // Example/default ACLs for unrestricted connections.
 {
 	"acls": [
