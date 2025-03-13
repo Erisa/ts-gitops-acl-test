@@ -7,6 +7,10 @@
 		"tag:connector1": ["autogroup:admin"],
 	},
 
+	"groups": {
+		"group:everyone": ["erisa@erisa.uk", "erisa@github"],
+	},
+
 	"acls": [
 		{"action": "accept", "src": ["autogroup:member"], "dst": ["*:*"]},
 		{
@@ -56,5 +60,13 @@
 			"domains":    ["example1.com"],
 			"routes":     ["192.0.2.0/24"],
 		}]}},
+
+		// Provides everyone access to Mullvad Exit Nodes
+		{
+			"target": ["group:everyone"],
+			"attr": [
+				"mullvad",
+			],
+		},
 	],
 }
