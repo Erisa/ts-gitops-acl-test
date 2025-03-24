@@ -1,18 +1,30 @@
 // This tailnet's ACLs are maintained in https://github.com/Erisa/ts-gitops-acl-test
-
 // Example/default ACLs for unrestricted connections.
 {
 	"tagOwners": {
-		"tag:connector":  ["autogroup:admin"],
-		"tag:connector1": ["autogroup:admin"],
+		"tag:connector": [
+			"autogroup:admin"
+		],
+		"tag:connector1": [
+			"autogroup:admin"
+		],
 	},
-
 	"groups": {
-		"group:everyone": ["erisa@erisa.uk", "erisa@github"],
+		"group:everyone": [
+			"erisa@erisa.uk",
+			"erisa@github"
+		],
 	},
-
 	"acls": [
-		{"action": "accept", "src": ["autogroup:member"], "dst": ["*:*"]},
+		{
+			"action": "accept",
+			"src": [
+				"autogroup:member"
+			],
+			"dst": [
+				"*:*"
+			]
+		},
 		{
 			// Private log streaming enables audit and network logs to be directly
 			// uploaded to a node in your tailnet without exposing it to the public internet.
@@ -20,8 +32,12 @@
 			// directly to the specified node.
 			// See https://tailscale.com/kb/1255/log-streaming/#private-endpoints
 			"action": "accept",
-			"src":    ["logstream@tailscale"],
-			"dst":    ["[fd7a:115c:a1e0::5001:9237]:9200"],
+			"src": [
+				"logstream@tailscale"
+			],
+			"dst": [
+				"[fd7a:115c:a1e0::5001:9237]:9200"
+			],
 		},
 	],
 	// Define users and devices that can use Tailscale SSH.
@@ -30,43 +46,115 @@
 		// Comment this section out if you want to define specific restrictions.
 		{
 			"action": "check",
-			"src":    ["autogroup:member"],
-			"dst":    ["autogroup:self"],
-			"users":  ["autogroup:nonroot", "root"],
+			"src": [
+				"autogroup:member"
+			],
+			"dst": [
+				"autogroup:self"
+			],
+			"users": [
+				"autogroup:nonroot",
+				"root"
+			],
 		},
 	],
-
 	"hosts": {
-		"test":   "192.168.1.0/24",
+		"test": "192.168.1.0/24",
 		"testip": "192.168.1.1",
 	},
-
 	"nodeAttrs": [
 		{
 			// Funnel policy, which lets tailnet members control Funnel
 			// for their own devices.
 			// Learn more at https://tailscale.com/kb/1223/tailscale-funnel/
-			"target": ["autogroup:member"],
-			"attr":   ["funnel"],
+			"target": [
+				"autogroup:member"
+			],
+			"attr": [
+				"funnel"
+			],
 		},
-		{"target": ["*"], "app": {"tailscale.com/app-connectors": [{
-			"name":       "example1",
-			"connectors": ["tag:connector"],
-			"domains":    ["example.com"],
-			"routes":     ["192.0.2.0/24"],
-		}, {
-			"name":       "example2",
-			"connectors": ["tag:connector1"],
-			"domains":    ["example1.com"],
-			"routes":     ["192.0.2.0/24"],
-		}]}},
-
+		{
+			"target": [
+				"*"
+			],
+			"app": {
+				"tailscale.com/app-connectors": [
+					{
+						"name": "example1",
+						"connectors": [
+							"tag:connector"
+						],
+						"domains": [
+							"example.com"
+						],
+						"routes": [
+							"192.0.2.0/24"
+						],
+					},
+					{
+						"name": "example2",
+						"connectors": [
+							"tag:connector1"
+						],
+						"domains": [
+							"example1.com"
+						],
+						"routes": [
+							"192.0.2.0/24"
+						],
+					}
+				]
+			}
+		},
 		// Provides everyone access to Mullvad Exit Nodes
 		{
-			"target": ["group:everyone"],
+			"target": [
+				"group:everyone"
+			],
 			"attr": [
 				"mullvad",
 			],
 		},
+		// taildrive
+		{
+			// Any device can access shared directories with Taildrive
+			"target": [
+				"*"
+			],
+			"attr": [
+				"drive:access"
+			],
+		},
+		{
+			// Only tailnet admins can use Taildrive to share directories
+			"target": [
+				"autogroup:admin"
+			],
+			"attr": [
+				"drive:share",
+				"drive:access",
+			],
+		}
 	],
+	"grants": [
+		{
+			"src": [
+				"*"
+			],
+			"dst": [
+				"*"
+			],
+			"app": {
+				"tailscale.com/cap/drive": [
+					{
+						"shares": [
+							"*"
+						],
+						"access": "rw"
+					}
+				]
+			}
+		}
+	]
 }
